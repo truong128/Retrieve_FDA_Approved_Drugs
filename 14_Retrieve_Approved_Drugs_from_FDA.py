@@ -6,8 +6,8 @@ import streamlit as st
 
 st.title("Retrieve FDA Approved Drugs")
 
-start_year = st.number_input("Enter Start Year", min_value=2000, max_value=2024, value=2021)
-end_year = st.number_input("Enter End Year", min_value=2000, max_value=2024, value=2023)
+start_year = st.number_input("Enter Start Year", min_value=1000, max_value=2100, value=2023)
+end_year = st.number_input("Enter End Year", min_value=1000, max_value=2024, value=2023)
 
 if start_year > end_year:
     st.error("Start year must be less than or equal to the end year.")
