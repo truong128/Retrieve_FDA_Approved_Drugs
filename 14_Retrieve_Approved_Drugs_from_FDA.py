@@ -1,6 +1,6 @@
 import os
 os.system('pip install lxml')
-import lxml
+
 import pandas as pd
 import streamlit as st
 
