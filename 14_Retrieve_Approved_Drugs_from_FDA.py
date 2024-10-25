@@ -1,5 +1,6 @@
 import os
 os.system('pip install lxml')
+
 import pandas as pd
 import streamlit as st
 
@@ -22,18 +23,34 @@ else:
         url = f"https://www.fda.gov/drugs/new-drugs-fda-cders-new-molecular-entities-and-new-therapeutic-biological-products/novel-drug-approvals-{year_str}"
 
         try:
-            df = pd.read_html(url)
-            df1 = df[0]
-            df1['Approval Year'] = year_str
-            combined_data = pd.concat([combined_data, df1], ignore_index=True)
+            
+            df_list = pd.read_html(url, flavor='lxml')
+            df = df_list[0]
+            df['Approval Year'] = year_str
+            combined_data = pd.concat([combined_data, df], ignore_index=True)
             st.success(f"Data for {year_str} retrieved successfully.")
         except Exception as e:
             st.warning(f"Failed to retrieve data for {year_str}: {e}")
 
+        
         progress_bar.progress((i + 1) / total_years)
 
+    
     if not combined_data.empty:
-        combined_data.to_excel("FDA_Approved_Novel_Drug_All_Years.xlsx", index=False)
-        st.success("All data combined into 'FDA_Approved_Novel_Drug_All_Years.xlsx'.")
+       
+        excel_path = "FDA_Approved_Novel_Drug_All_Years.xlsx"
+        combined_data.to_excel(excel_path, index=False)
+
+        
         st.dataframe(combined_data)
 
+        
+        with open(excel_path, "rb") as file:
+            st.download_button(
+                label="Download Excel File",
+                data=file,
+                file_name=excel_path,
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+    else:
+        st.warning("No data available to display or download.")
